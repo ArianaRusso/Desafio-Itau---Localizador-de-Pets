@@ -1,9 +1,11 @@
-package com.itau.localizador_pets.core.service;
+package com.itau.localizador_pets.unit;
 
 import com.itau.localizador_pets.core.entities.InfoRastreioPet;
 import com.itau.localizador_pets.core.entities.LocalizacaoPet;
 import com.itau.localizador_pets.core.exceptions.ErroIntegracaoException;
 import com.itau.localizador_pets.core.exceptions.LocalizacaoNaoEncontradaException;
+import com.itau.localizador_pets.core.service.BuscarLocalizacaoClient;
+import com.itau.localizador_pets.core.service.LocalizadorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,12 +28,12 @@ import static org.mockito.Mockito.when;
 class LocalizadorServiceImplTest {
 
     @Mock
-    private BuscarLocalizacaoClient client;
+    BuscarLocalizacaoClient client;
 
     @InjectMocks
-    private LocalizadorServiceImpl service;
+    LocalizadorServiceImpl service;
 
-    private InfoRastreioPet infoRastreioPet;
+    InfoRastreioPet infoRastreioPet;
 
     @BeforeEach
     void setUp() {

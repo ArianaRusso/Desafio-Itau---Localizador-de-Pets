@@ -32,7 +32,7 @@ public class InfoRastreioPet {
         return dataHora;
     }
 
-    public  String getCoordenadas(){
+    public String getCoordenadas() {
         return latitude + "," + longitude;
     }
 }

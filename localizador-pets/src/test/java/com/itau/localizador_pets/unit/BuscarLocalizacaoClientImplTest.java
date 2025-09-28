@@ -1,6 +1,8 @@
-package com.itau.localizador_pets.infrastructure.client;
+package com.itau.localizador_pets.unit;
 
 import com.itau.localizador_pets.core.entities.LocalizacaoPet;
+import com.itau.localizador_pets.infrastructure.client.BuscarLocalizacaoClientImpl;
+import com.itau.localizador_pets.infrastructure.client.RastreioLocalizacaoClient;
 import com.itau.localizador_pets.infrastructure.dto.DadosLocalizacaoResponse;
 import com.itau.localizador_pets.infrastructure.dto.LocalizaoClientResponse;
 import com.itau.localizador_pets.infrastructure.mapper.ClientToDomainMapper;
@@ -36,10 +38,10 @@ class BuscarLocalizacaoClientImplTest {
     @Mock
     ClientToDomainMapper mapper;
 
-    private final String chaveApi = System.getenv("POSITIONSTACK_API_KEY");
+   String chaveApi = System.getenv("POSITIONSTACK_API_KEY");
 
-    private LocalizaoClientResponse localizaoClientResponse;
-    private String coordenadas;
+    LocalizaoClientResponse localizaoClientResponse;
+    String coordenadas;
 
     @BeforeEach
     void setUp() {

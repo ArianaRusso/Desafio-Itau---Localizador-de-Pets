@@ -24,7 +24,7 @@ public class PetController {
     private final DtoToDomainMapper mapper;
 
     @PostMapping("/localizacao")
-    public ResponseEntity<LocalizacaoResponse> obterLocalizacao(@Valid @RequestBody RastreioRequest request){
+    public ResponseEntity<LocalizacaoResponse> obterLocalizacao(@Valid @RequestBody RastreioRequest request) {
         LocalizacaoPet localizacaoPet = service.obterLocalizacao(mapper.toDomain(request));
         return ResponseEntity.status(HttpStatus.OK).body(mapper.toDto(localizacaoPet));
     }

@@ -1,4 +1,4 @@
-package com.itau.localizador_pets.presentation.controller;
+package com.itau.localizador_pets.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -28,21 +30,22 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 ;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PetControllerIT {
 
-    private static WireMockServer wireMockServer;
+    static WireMockServer wireMockServer;
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
 
     @BeforeAll
     static void startWireMock() {
@@ -67,6 +70,13 @@ public class PetControllerIT {
     @BeforeEach
     void setupWiremock() {
         wireMockServer.resetAll();
+    }
+
+    @Test
+    @DisplayName("Deve retornar OK quando localização encontrada")
+    void deveRetornar200QuandoLocalizacaoEncontrada() throws Exception {
+        RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0,
+               LocalDateTime.now());
 
         stubFor(get(urlPathEqualTo("/reverse"))
                 .withQueryParam("query", equalTo("123.0,456.0"))
@@ -86,13 +96,6 @@ public class PetControllerIT {
                               ]
                             }
                             """)));
-    }
-
-    @Test
-    @DisplayName("Deve retornar 200 OK com JSON vindo do serviço real")
-    void deveRetornar200ComJsonDoServicoReal() throws Exception {
-        RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0,
-               LocalDateTime.now());
 
         String url = "http://localhost:" + port + "/v1/pet/localizacao";
 
@@ -107,4 +110,55 @@ public class PetControllerIT {
         assertThat(responseEntity.getBody().bairro()).isEqualTo("Centro");
         assertThat(responseEntity.getBody().endereco()).isEqualTo("Rua A, 123");
     }
+
+    @Test
+    @DisplayName("Deve retornar NOT_FOUND quando não encontrar localização")
+    void deveRetornar404QuandoLocalizacaoNaoEncontrada() throws Exception {
+        RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0, LocalDateTime.now());
+
+        // Stub do WireMock retornando lista vazia
+        wireMockServer.resetAll();
+        stubFor(get(urlPathEqualTo("/reverse"))
+                .withQueryParam("query", equalTo("123.0,456.0"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""
+                        { "data": [] }
+                    """)));
+
+        String url = "http://localhost:" + port + "/v1/pet/localizacao";
+
+        var exception = assertThrows(
+                HttpClientErrorException.NotFound.class,
+                () -> restTemplate.postForEntity(url, request, String.class)
+        );
+
+        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(exception.getResponseBodyAsString()).contains("Localização não encontrada para as coordenadas");
+    }
+
+    @Test
+    @DisplayName("Deve retornar BAD_GATEWAY quando ocorrer erro na integração")
+    void deveRetornar502QuandoErroNaIntegracao() throws Exception {
+        RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0, LocalDateTime.now());
+
+        // Stub do WireMock retornando 500
+        wireMockServer.resetAll();
+        stubFor(get(urlPathEqualTo("/reverse"))
+                .withQueryParam("query", equalTo("123.0,456.0"))
+                .willReturn(aResponse()
+                        .withStatus(500)));
+
+        String url = "http://localhost:" + port + "/v1/pet/localizacao";
+
+        var exception = assertThrows(
+                HttpServerErrorException.BadGateway.class,
+                () -> restTemplate.postForEntity(url, request, String.class)
+        );
+
+        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_GATEWAY);
+        assertThat(exception.getResponseBodyAsString()).contains("Erro ao integrar com PositionStack");
+    }
+
 }

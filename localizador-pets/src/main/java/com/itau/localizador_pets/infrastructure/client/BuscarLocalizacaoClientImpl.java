@@ -1,12 +1,10 @@
 package com.itau.localizador_pets.infrastructure.client;
 
 import com.itau.localizador_pets.core.entities.LocalizacaoPet;
-import com.itau.localizador_pets.infrastructure.mapper.ClientToDomainMapper;
 import com.itau.localizador_pets.core.service.BuscarLocalizacaoClient;
+import com.itau.localizador_pets.infrastructure.mapper.ClientToDomainMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-
 
 import java.util.List;
 

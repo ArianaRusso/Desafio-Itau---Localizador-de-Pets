@@ -18,4 +18,5 @@ public record DadosLocalizacaoResponse(
         String country,
         String country_code,
         String neighbourhood
-){}
+) {
+}

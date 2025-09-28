@@ -1,9 +1,10 @@
-package com.itau.localizador_pets.presentation.controller;
+package com.itau.localizador_pets.unit;
 
 import com.itau.localizador_pets.core.entities.InfoRastreioPet;
 import com.itau.localizador_pets.core.entities.LocalizacaoPet;
 import com.itau.localizador_pets.core.exceptions.LocalizacaoNaoEncontradaException;
 import com.itau.localizador_pets.core.service.LocalizadorService;
+import com.itau.localizador_pets.presentation.controller.PetController;
 import com.itau.localizador_pets.presentation.dto.LocalizacaoResponse;
 import com.itau.localizador_pets.presentation.dto.RastreioRequest;
 import com.itau.localizador_pets.presentation.mapper.DtoToDomainMapper;
@@ -20,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,19 +31,19 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PetControllerTest {
     @Mock
-    private LocalizadorService service;
+    LocalizadorService service;
 
     @Mock
-    private DtoToDomainMapper mapper;
+    DtoToDomainMapper mapper;
 
     @InjectMocks
-    private PetController controller;
+    PetController controller;
 
-    private RastreioRequest request;
+    RastreioRequest request;
 
-    private InfoRastreioPet infoRastreioPet;
+    InfoRastreioPet infoRastreioPet;
 
-    private LocalizacaoPet localizacaoPet;
+    LocalizacaoPet localizacaoPet;
 
     @BeforeEach
     void setUp() {
