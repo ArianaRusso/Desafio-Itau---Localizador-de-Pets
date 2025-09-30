@@ -23,26 +23,51 @@ detalhada (país, estado, cidade, bairro e endereço).
 - Maven instalado.
 - Chave de API do [PositionStack](https://positionstack.com/).
 
+#### ▶️ Passos para rodar localmente
+
 1. Clone o repositório:
-    ```bash
+    ```powershell
     git clone https://github.com/ArianaRusso/Desafio-Itau---Localizador-de-Pets.git
     cd Desafio-Itau---Localizador-de-Pets
+    cd localizador-pets
     ```
 2. Instale as dependências:
-    ```bash
-    ./mvnw clean install
+    ```powershell
+      mvn clean install
     ```
-3. Adicione a chave de API do PositionStack no arquivo `application.yml` ou como variável de ambiente:
-    ```bash
-     POSITIONSTACK_API_KEY=your_api_key_here
+3. Configure a chave da API PositionStack:
+    - No arquivo application.yml:
+        ```yaml
+        positionstack:
+            api:
+              key: sua_chave_aqui
+        ``` 
+    - Ou via variável de ambiente:
+        - No Linux/Mac:
+            ```bash
+            export POSITIONSTACK_API_KEY=sua_chave_aqui
+            ```
+        - No Windows (PowerShell):
+            ```powershell
+            setx POSITIONSTACK_API_KEY "sua_chave_aqui"
+            ```
+        
+      
+
 
 ### ▶️ Execução
 
 1. Rode o comando:
-    ```bash
-    mvn spring-boot:run
-    ```
+   - Feche o terminal e abra novamente para reconhecer a variável de ambiente, se for o caso.
+       ```powershell
+        cd Desafio-Itau---Localizador-de-Pets
+        cd localizador-pets
+     
+        mvn spring-boot:run
+       ```
 2. Aplicação está rodando na porta [localhost:8080](http://localhost:8080/)
+
+3. Para testar a API utilize o Postmain, Insomnia ou acessar a documentação Swagger.
 
 ### 📌 Endpoints principais
 - `POST /v1/pet/localizacao`: Recebe as coordenadas do pet e retorna a localização detalhada.
