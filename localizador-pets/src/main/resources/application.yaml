@@ -5,6 +5,12 @@ spring:
   application:
     name: localizador-pets
 
+info:
+  app:
+    name: Localizador de Pets
+    description: API para localização de pets via PositionStack
+    version: 1.0.0
+
 positionstack:
   api:
     url: https://api.positionstack.com/v1
@@ -14,10 +20,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, info, metrics, prometheus
+        include: health, info, metrics, loggers, httpexchanges
   endpoint:
     health:
       show-details: always
+  info:
+    env:
+      enabled: true
 
 logging:
   level:
@@ -30,5 +39,7 @@ springdoc:
     path: /docs
   api-docs:
     path: /api-docs
+
+
 
 

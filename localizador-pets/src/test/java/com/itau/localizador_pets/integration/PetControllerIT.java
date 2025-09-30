@@ -42,9 +42,6 @@ public class PetControllerIT {
     @LocalServerPort
     int port;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
     RestTemplate restTemplate = new RestTemplate();
 
     @BeforeAll
@@ -61,7 +58,6 @@ public class PetControllerIT {
         }
     }
 
-    // 🔹 injeta a URL dinâmica do WireMock no FeignClient
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
         registry.add("positionstack.api.url", () -> "http://localhost:" + wireMockServer.port());
@@ -116,8 +112,8 @@ public class PetControllerIT {
     void deveRetornar404QuandoLocalizacaoNaoEncontrada() throws Exception {
         RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0, LocalDateTime.now());
 
-        // Stub do WireMock retornando lista vazia
         wireMockServer.resetAll();
+
         stubFor(get(urlPathEqualTo("/reverse"))
                 .withQueryParam("query", equalTo("123.0,456.0"))
                 .willReturn(aResponse()
@@ -143,7 +139,6 @@ public class PetControllerIT {
     void deveRetornar502QuandoErroNaIntegracao() throws Exception {
         RastreioRequest request = new RastreioRequest("COL-12345", 123.0, 456.0, LocalDateTime.now());
 
-        // Stub do WireMock retornando 500
         wireMockServer.resetAll();
         stubFor(get(urlPathEqualTo("/reverse"))
                 .withQueryParam("query", equalTo("123.0,456.0"))
@@ -160,5 +155,4 @@ public class PetControllerIT {
         assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_GATEWAY);
         assertThat(exception.getResponseBodyAsString()).contains("Erro ao integrar com PositionStack");
     }
-
 }
