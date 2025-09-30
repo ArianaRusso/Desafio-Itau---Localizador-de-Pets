@@ -24,6 +24,8 @@ management:
   endpoint:
     health:
       show-details: always
+    httpexchanges:
+      enabled: true
   info:
     env:
       enabled: true

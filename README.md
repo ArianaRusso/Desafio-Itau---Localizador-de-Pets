@@ -64,7 +64,7 @@ detalhada (país, estado, cidade, bairro e endereço).
        ```
 2. Aplicação está rodando na porta [localhost:8080](http://localhost:8080/)
 
-3. Para testar a API utilize o Postmain, Insomnia ou acesse a documentação Swagger.
+3. Para testar a API utilize o Postman, Insomnia ou acesse a documentação Swagger.
 
 ### 📌 Endpoints principais
 - `POST /v1/pet/localizacao`: Recebe as coordenadas do pet e retorna a localização detalhada.
@@ -103,7 +103,6 @@ A aplicação implementa observabilidade utilizando **Spring Boot Actuator** e *
 - `/actuator/health` → Verifica a saúde da aplicação e da integração com o serviço externo PositionStack.
 - `/actuator/info` → Exibe informações sobre a aplicação (nome, versão, descrição).
 - `/actuator/metrics` → Métricas padrão (uso de memória, threads, HTTP requests).
-- `/actuator/loggers` → Permite consultar e alterar níveis de log em tempo real.
 - `/actuator/httpexchanges` → Histórico de chamadas HTTP.
 
 #### Logs
